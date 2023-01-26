@@ -15,7 +15,11 @@ class PostController extends Controller
      */
     public function index()
     {
-        //
+        $posts = Post::paginate(10);
+
+        return view('admin.posts.index', [
+            'posts' => $posts,
+        ]);
     }
 
     /**
@@ -47,7 +51,9 @@ class PostController extends Controller
      */
     public function show(Post $post)
     {
-        //
+        return view('admin.posts.show', [
+            'post' => $post,
+        ]);
     }
 
     /**
@@ -58,7 +64,9 @@ class PostController extends Controller
      */
     public function edit(Post $post)
     {
-        //
+        return view('admin.posts.edit', [
+            'post' => $post,
+        ]);
     }
 
     /**
@@ -70,7 +78,22 @@ class PostController extends Controller
      */
     public function update(Request $request, Post $post)
     {
-        //
+
+        $data = $request->all();
+
+        //dd($post->content);
+
+        $post->slug     = $data['slug'];
+        $post->title    = $data['title'];
+        $post->image    = $data['image'];
+        $post->content  = $data['content'];
+        $post->excerpt  = $data['excerpt'];
+        $post->update();
+
+
+        return redirect()->route('admin.posts.show', [
+            'post' => $post,
+        ]);
     }
 
     /**
