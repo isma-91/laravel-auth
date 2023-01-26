@@ -32,9 +32,9 @@
             </div>
         </form>
 
-        {{-- <form action="{{ route('posts.destroy', ['post' => $post]) }}" method="POST">
+        <form action="{{ route('admin.posts.destroy', ['post' => $post]) }}" method="POST" class="text-center p-3">
             @method('DELETE')
             @csrf
             <button class="btn btn-danger">Elimina</button>
-        </form> --}}
+        </form>
 @endsection
