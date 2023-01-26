@@ -29,7 +29,7 @@ class PostController extends Controller
      */
     public function create()
     {
-        //
+        return view('admin.posts.create');
     }
 
     /**
@@ -40,7 +40,21 @@ class PostController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $data = $request->all();
+
+        //dd($post->content);
+        $post = new Post;
+        $post->slug     = $data['slug'];
+        $post->title    = $data['title'];
+        $post->image    = $data['image'];
+        $post->content  = $data['content'];
+        $post->excerpt  = $data['excerpt'];
+        $post->save();
+
+
+        return redirect()->route('admin.posts.show', [
+            'post' => $post,
+        ]);
     }
 
     /**

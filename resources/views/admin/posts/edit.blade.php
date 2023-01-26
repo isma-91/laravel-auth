@@ -21,7 +21,7 @@
             </div>
             <div class="mb-3">
                 <label for="content" class="form-label">Contenuto del post</label>
-                <textarea class="form-control" name="content" id="content" rows="3">{{ $post->content }}</textarea>
+                <textarea class="form-control" name="content" id="content" rows="10">{{ $post->content }}</textarea>
             </div>
             <div class="mb-3">
                 <label for="excerpt" class="form-label">Anteprima</label>
