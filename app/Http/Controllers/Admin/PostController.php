@@ -2,12 +2,24 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Http\Controllers\Controller;
 use App\Post;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
+use App\Http\Controllers\Controller;
 
 class PostController extends Controller
 {
+    private $validations = [
+        'slug'      => [
+            'required',
+            'string',
+            'max:100',
+        ],
+        'title'     => 'required|string|max:100',
+        'image'     => 'url|max:100',
+        'content'   => 'string',
+        'excerpt'   => 'string',
+    ];
     /**
      * Display a listing of the resource.
      *
@@ -41,13 +53,17 @@ class PostController extends Controller
     public function store(Request $request)
     {
 
-        $request->validate([
-        'slug'      => 'required|string|max:100|unique:posts',
-        'title'     => 'required|string|max:100',
-        'image'     => 'url|max:100',
-        'content'   => 'string',
-        'excerpt'   => 'string',
-        ]);
+        $this->validations['slug'][]= 'unique:posts';
+        $request->validate($this->validations);
+
+        //Metodo lungo senza variabile
+        // $request->validate([
+        // 'slug'      => 'required|string|max:100|unique:posts',
+        // 'title'     => 'required|string|max:100',
+        // 'image'     => 'url|max:100',
+        // 'content'   => 'string',
+        // 'excerpt'   => 'string',
+        // ]);
 
         $data = $request->all();
 
@@ -101,6 +117,24 @@ class PostController extends Controller
      */
     public function update(Request $request, Post $post)
     {
+
+        $this->validations['slug'][] = Rule::unique('posts')->ignore($post);
+        $request->validate($this->validations);
+
+        //Metodo lungo senza variabile
+        // $request->validate([
+        //     'slug'      => [
+        //         'required',
+        //         'string',
+        //         'max:100',
+        //         Rule::unique('posts')->ignore($post),
+        //     ],
+        //     'title'     => 'required|string|max:100',
+        //     'image'     => 'url|max:100',
+        //     'uploaded_img'  => 'image|max:1024',
+        //     'content'   => 'string',
+        //     'excerpt'   => 'string',
+        // ]);
 
         $data = $request->all();
 
