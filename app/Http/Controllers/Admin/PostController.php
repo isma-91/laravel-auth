@@ -6,6 +6,7 @@ use App\Post;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Storage;
 
 class PostController extends Controller
 {
@@ -15,10 +16,11 @@ class PostController extends Controller
             'string',
             'max:100',
         ],
-        'title'     => 'required|string|max:100',
-        'image'     => 'url|max:100',
-        'content'   => 'string',
-        'excerpt'   => 'string',
+        'title'          => 'required|string|max:100',
+        'image'          => 'url|max:100',
+        'uploaded_img'   => 'image|max:1024',
+        'content'        => 'string',
+        'excerpt'        => 'string',
     ];
     /**
      * Display a listing of the resource.
@@ -67,13 +69,18 @@ class PostController extends Controller
 
         $data = $request->all();
 
+        //Per importare un immagine nostra nella cartella "public".
+        //Ricordarsi di creare PRIMA la cartella "uploads" nella cartella "public" dello "storage" originale!!!
+        $img_path = Storage::put('uploads', $data['uploaded_img']);
+
         //dd($post->content);
         $post = new Post;
-        $post->slug     = $data['slug'];
-        $post->title    = $data['title'];
-        $post->image    = $data['image'];
-        $post->content  = $data['content'];
-        $post->excerpt  = $data['excerpt'];
+        $post->slug         = $data['slug'];
+        $post->title        = $data['title'];
+        $post->image        = $data['image'];
+        $post->uploaded_img = $img_path;
+        $post->content      = $data['content'];
+        $post->excerpt      = $data['excerpt'];
         $post->save();
 
 
@@ -138,11 +145,15 @@ class PostController extends Controller
 
         $data = $request->all();
 
+        $img_path = Storage::put('uploads', $data['uploaded_img']);
+        Storage::delete($post->uploaded_img);
+
         //dd($post->content);
 
         $post->slug     = $data['slug'];
         $post->title    = $data['title'];
         $post->image    = $data['image'];
+        $post->uploaded_img = $img_path;
         $post->content  = $data['content'];
         $post->excerpt  = $data['excerpt'];
         $post->update();
@@ -162,6 +173,6 @@ class PostController extends Controller
     public function destroy(Post $post)
     {
         $post->delete();
-        return redirect()->route('admin.posts.index');
+        return redirect()->route('admin.posts.index')->with('success_delete', $post);
     }
 }

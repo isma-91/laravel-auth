@@ -1,6 +1,13 @@
 @extends('layouts.app')
 
 @section('content')
+
+    @if (session('success_delete'))
+        <div class="alert alert-warning" role="alert">
+            Il post "{{ session('success_delete')->title }}" con ID {{ session('success_delete')->id }} è stato eliminato con successo!!
+        </div>
+    @endif
+
     <table class="table table-striped">
         <thead>
             <tr>
