@@ -40,6 +40,15 @@ class PostController extends Controller
      */
     public function store(Request $request)
     {
+
+        $request->validate([
+        'slug'      => 'required|string|max:100|unique:posts',
+        'title'     => 'required|string|max:100',
+        'image'     => 'url|max:100',
+        'content'   => 'string',
+        'excerpt'   => 'string',
+        ]);
+
         $data = $request->all();
 
         //dd($post->content);
